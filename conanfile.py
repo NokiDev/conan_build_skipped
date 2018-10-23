@@ -8,8 +8,12 @@ class HelloConan(ConanFile):
     url = "<Package recipe repository url here, for issues about the package>"
     description = "<Description of Hello here>"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {
+        "shared": [True, False],
+        "build_id_test" : [True, False], 
+        "package_id_test" : [True, False]
+    }
+    default_options = "shared=False", "build_id_test=True", "package_id_test=False"
     generators = "cmake"
 
     def source(self):
@@ -30,10 +34,15 @@ conan_basic_setup()''')
         self.output.info("BUILD CALLED")
         cmake = CMake(self)
         cmake.configure(source_folder="hello")
-        self.output.error("ERRROR")
-        return -1
+        if self.options.build_id_test : 
+            i = 1/0 # Should raise ZeroDivisionError: division by zero comment it out to check package_id
         cmake.build()
 
+        
+    def package_id(self):
+        if self.options.package_id_test :
+            i = 1/0 # Should raise ZeroDivisionError: division by zero
+        
     def package(self):
         self.copy("*.h", dst="include", src="hello")
         self.copy("*hello.lib", dst="lib", keep_path=False)
