@@ -40,10 +40,11 @@ conan_basic_setup()''')
 
         
     def package_id(self):
-        if self.options.package_id_test :
-            i = 1/0 # Should raise ZeroDivisionError: division by zero
+        self.info.settings.build_type="Any"
         
     def package(self):
+        if self.options.package_id_test :
+            i = 1/0 # Should raise ZeroDivisionError: division by zero
         self.copy("*.h", dst="include", src="hello")
         self.copy("*hello.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
